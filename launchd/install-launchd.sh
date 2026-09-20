@@ -43,7 +43,13 @@ text = text.replace("&lt;WRAPPER_PATH&gt;", wrapper)
 Path(destination).write_text(text, encoding="utf-8")
 PY
 
-if ! plutil -lint "$destination"; then
+# plutil 只有 macOS 有；沒有就用 plistlib 驗（CI 的 Linux 也能跑）
+if command -v plutil >/dev/null 2>&1; then
+  lint_ok=0; plutil -lint "$destination" || lint_ok=1
+else
+  lint_ok=0; python3 -c 'import plistlib,sys; plistlib.load(open(sys.argv[1],"rb"))' "$destination" || lint_ok=1
+fi
+if ((lint_ok != 0)); then
   echo "FAIL plist lint: $destination" >&2
   exit 1
 fi
