@@ -20,7 +20,7 @@ if [[ -z "$repo" ]]; then
 elif [[ ! -d "$repo" ]]; then
   fail "repo: directory not found: $repo"
 elif ! git -C "$repo" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  fail "repo: not a git worktree: $repo"
+  fail "repo: not a git repo: $repo（Orca 對非 git 資料夾只給一個工作區，無法平行開 worktree；要隔離派工先 git init）"
 else
   dirty=$(git -C "$repo" status --porcelain 2>&1) || dirty="<git status failed>"
   if [[ -z "$dirty" ]]; then

@@ -2,6 +2,19 @@
 
 這是可攜式速查，不含個人 IP、帳號或本機 repo 路徑。實際旗標以當前 `orca skills get orchestration` 和 `--help` 為準。
 
+## 資料模型：repo 只是容器，worktree 才是任務
+
+```
+Repo（專案）          登錄進 Orca 的容器；也可以是沒有 git 的資料夾（資料夾型專案）
+ └ Worktree           任務單位：一個任務一個分支一個目錄；手機上一列就是一個
+    └ Terminal        一個 worktree 可開多個
+       └ Agent        一個終端機跑一個 Claude Code／pi／Codex
+```
+
+- 編排層的 Run／Task／Dispatch 綁**終端機**，不綁 repo；`worker-start` 能用 `--repo`／`--worktree`／`--host` 指到別的 repo 或機器（跨 repo 未實測）。
+- **沒有 git 的資料夾只有一個工作區**（原始碼 `repo-worktrees.ts` 對 folder 型只回傳資料夾本身）：能開終端機與 agent，不能開第二個 worktree，所以無法平行隔離。CLI `orca repo add` 直接拒絕非 git 路徑。要平行就在那個資料夾 `git init`（不用 remote），Orca 偵測到 `.git` 會自動升級成 git 型專案。
+- 移除 repo 登錄沒有 `repo rm`：`orca project setups --json` 找 setup id → `orca project setup-delete --setup <id>`。
+
 ## 三種使用形態
 
 | 形態 | 啟動 | 用途 |

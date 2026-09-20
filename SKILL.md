@@ -1,6 +1,6 @@
 ---
 name: orca-collab
-version: 0.1.0
+version: 0.1.1
 description: 用 Orca 編排可追蹤、可驗收的隔離工作。當用戶說「用 Orca 派」「用 Orca 開三席」「Orca 現況」「你當 operator」時使用。不適用於：herdr 內的對等協作（用 herdr-collab），以及不需要隔離 worktree 的小改動。
 ---
 
