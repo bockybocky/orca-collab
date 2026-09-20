@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.user.orca-serve</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>&lt;WRAPPER_PATH&gt;</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>ORCA_TELEMETRY_DISABLED</key>
+    <string>1</string>
+    <key>ORCA_SERVE_ARGS</key>
+    <string>--pairing-address &lt;TAILSCALE_IP&gt;</string>
+  </dict>
+  <key>RunAtLoad</key>
+  <true/>
+  <!-- Desktop Orca and serve share a single-instance process. See Orca issue #15537:
+       closing the window preserves serve, but Cmd-Q kills it. The wrapper owns retry
+       policy and remains alive; launchd KeepAlive protects only abnormal wrapper exit. -->
+  <key>KeepAlive</key>
+  <true/>
+  <key>ThrottleInterval</key>
+  <integer>60</integer>
+  <key>StandardOutPath</key>
+  <string>&lt;HOME&gt;/Library/Logs/orca-serve.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>&lt;HOME&gt;/Library/Logs/orca-serve.err.log</string>
+</dict>
+</plist>

@@ -1,0 +1,4 @@
+{"_keepalive":true,"_heartbeat":true,"elapsedMs":15003}
+non-json diagnostic between frames
+{"_keepalive":true,"_heartbeat":true,"elapsedMs":30006}
+{"id":"check_1","ok":true,"result":{"messages":[{"type":"question","subject":"Need decision","body":"Keep the literal _keepalive string in this result body.","payload":{"choice":"safe"}}],"count":1,"deliveryId":"delivery_123","timedOut":false}}
