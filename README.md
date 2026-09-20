@@ -63,6 +63,20 @@ serve 跑著時開桌面版：不是第二個程序，serve 程序自己開出�
 
 Opening the desktop app while serve is running reuses the serve process and opens its window (Orca issue #15537): closing the window (⌘W) keeps serve alive, while ⌘Q exits it with code 0 and the wrapper restarts it after five seconds; real launchd loading and iCloud FDA access remain for the operator to verify with the production label.
 
+## 平台支援 Platform support
+
+| 部分 | macOS | Windows |
+|---|---|---|
+| `SKILL.md`、`references/`（operator 流程） | ✅ 實測 | ✅ 應可（全走 `orca` CLI；未實測） |
+| `scripts/preflight.sh`、`orca-wait.sh`、`bootstrap.py` | ✅ 實測 | ⚠️ 在 Git Bash 跑，未實測 |
+| `scripts/install.sh`（symlink） | ✅ | ❌ Git Bash 的 `ln -s` 預設是複製；請手動 `mklink /D`（需開發者模式）或直接 clone 到 `%USERPROFILE%\.claude\skills\orca-collab` |
+| `launchd/` | ✅ 實測 | ❌ 不適用。改用工作排程器，或桌面版開著就不需要 serve |
+| 「serve 模式不准 ⌘Q」 | ✅ 查證 | ⚠️ Windows 的退出／單一實例行為未驗 |
+
+Windows 的支援請看 issue #1；歡迎補 PowerShell 版安裝與工作排程器範本。
+
+macOS is the tested platform. On Windows the operator flow (`SKILL.md`, `references/`) should work as-is since it only calls the `orca` CLI; the bash helpers need Git Bash and are untested; `install.sh` and `launchd/` do not apply — see issue #1.
+
 ## 測試 Tests
 
 ```bash
