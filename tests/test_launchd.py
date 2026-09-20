@@ -1,5 +1,6 @@
 import os
 import plistlib
+import shutil
 import subprocess
 import sys
 import time
@@ -25,8 +26,9 @@ def test_install_launchd_writes_linted_plist_with_required_keys(tmp_path):
     )
     assert result.returncode == 0, result.stderr
     plist_path = out / "com.user.orca-serve.plist"
-    lint = subprocess.run(["plutil", "-lint", str(plist_path)], capture_output=True, text=True)
-    assert lint.returncode == 0, lint.stderr
+    if shutil.which("plutil"):  # macOS 才有；Linux CI 靠下面的 plistlib.load 驗
+        lint = subprocess.run(["plutil", "-lint", str(plist_path)], capture_output=True, text=True)
+        assert lint.returncode == 0, lint.stderr
     with plist_path.open("rb") as handle:
         data = plistlib.load(handle)
     for key in ("ProgramArguments", "EnvironmentVariables", "RunAtLoad", "KeepAlive"):
