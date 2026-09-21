@@ -96,6 +96,17 @@ def test_preflight_dirty_repo_is_warn(tmp_path):
     assert "PASS orca runtime ready" in result.stdout
 
 
+def test_preflight_non_git_folder_fails_with_git_init_hint(tmp_path):
+    folder = tmp_path / "plain"
+    folder.mkdir()
+    env = _preflight_env(tmp_path, "allow")
+    result = subprocess.run(["bash", str(PREFLIGHT), "--repo", str(folder)], capture_output=True, text=True, env=env)
+    assert result.returncode == 1, result.stdout + result.stderr
+    assert "unbound variable" not in result.stderr  # 全形括號緊接 $repo 會被 bash 吃進變數名
+    assert f"FAIL repo: not a git repo: {folder}（" in result.stdout
+    assert "git init" in result.stdout
+
+
 def test_preflight_quota_allow_prints_four_fields_and_passes(tmp_path):
     repo = tmp_path / "repo"
     repo.mkdir()
