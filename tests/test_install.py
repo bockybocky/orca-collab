@@ -132,7 +132,9 @@ def test_install_appends_strict_options_for_ln(tmp_path):
     shim = (
         'case "$MSYS" in "existing winsymlinks:deepcopy winsymlinks:nativestrict") ;; *) exit 8 ;; esac\n'
         'case "$CYGWIN" in "existing winsymlinks:sys winsymlinks:nativestrict") ;; *) exit 8 ;; esac\n'
-        'exec /usr/bin/ln "$@"\n'
+        # macOS 的 ln 在 /bin，Linux／Git Bash 在 /usr/bin（或兩者都有）
+        'for real in /bin/ln /usr/bin/ln; do [ -x "$real" ] && exec "$real" "$@"; done\n'
+        'exit 9\n'
     )
     result, _, _ = run_install(tmp_path, shim, {
         "MSYS": "existing winsymlinks:deepcopy",
